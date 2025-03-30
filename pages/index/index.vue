@@ -4,7 +4,7 @@
 			<swiper indicator-dots autoplay :interval="3000" :duration="1000" indicator-color="rgba(255,255,255,0.5)"
 				indicator-active-color="#fff">
 				<swiper-item v-for="item in 3">
-					<image :src="`/common/images/banner${item}.jpg`" mode="aspectFill"></image>
+					<image src="/common/images/banner1.jpg" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -22,6 +22,42 @@
 			</view>
 			<view class="right">
 				<uni-icons type="right" size="16" color="#333"></uni-icons>
+			</view>
+		</view>
+		<view class="select">
+			<common-title>
+				<template #name>
+					每日推荐
+				</template>
+				<template #custom>
+					<view class="date">
+						<uni-icons type="calendar" size="20" color="#28b389"></uni-icons>
+						<uni-dateformat :date="Date.now()" format='dd日'></uni-dateformat>
+					</view>
+				</template>
+			</common-title>
+			<view class="content">
+				<scroll-view scroll-x="true">
+					<view class="box" v-for="item in 8">
+						<image src="/common/images/preview_small.webp" mode="aspectFill"></image>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		<view class="theme">
+			<common-title>
+				<template #name>
+					专题精选
+				</template>
+				<template #custom>
+					<navigator url="/pages/classify/classify" class="more">More+</navigator>
+				</template>
+			</common-title>
+
+			<view class="content">
+				<theme-item v-for="item in 8"></theme-item>
+				<theme-item :is-more="true"></theme-item>
+
 			</view>
 		</view>
 	</view>
@@ -90,6 +126,62 @@
 
 			.right {
 				width: 70rpx
+			}
+		}
+
+		.select {
+			padding-top: 20rpx;
+
+			.date {
+				color: #28b389;
+				display: flex;
+				align-items: center;
+			}
+
+			.content {
+				width: 720rpx;
+				margin-left: 30rpx;
+				margin-top: 30rpx;
+
+				scroll-view {
+					white-space: nowrap;
+
+					.box {
+						width: 200rpx;
+						height: 430rpx;
+						display: inline-block;
+						margin-right: 15rpx;
+
+						image {
+							width: 100%;
+							height: 100%;
+							border-radius: 10rpx;
+						}
+					}
+
+					.box:last-child {
+						margin-right: 30rpx;
+					}
+				}
+			}
+		}
+
+		.theme {
+			padding: 50rpx 0;
+
+			.more {
+				font-size: 32rpx;
+				color: #888
+			}
+
+			.content {
+				margin-top: 30rpx;
+				padding: 0 30rpx;
+				gap: 15rpx;
+				// 网格布局
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+
 			}
 		}
 	}
