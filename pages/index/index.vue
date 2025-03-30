@@ -8,6 +8,22 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<view class="notice">
+			<view class="left">
+				<uni-icons type="sound-filled" size="20" color="#28b389"></uni-icons>
+				<text class="text">公告</text>
+			</view>
+			<view class="center">
+				<swiper vertical autoplay :interval="3000" :duration="1000" circular>
+					<swiper-item v-for="item in 4">
+						文字效果文字效果文字效果文字效果文字效果
+					</swiper-item>
+				</swiper>
+			</view>
+			<view class="right">
+				<uni-icons type="right" size="16" color="#333"></uni-icons>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -28,8 +44,52 @@
 				image {
 					width: 100%;
 					height: 100%;
-					border-radius: 10px;
+					border-radius: 10rpx;
 				}
+			}
+		}
+
+		.notice {
+			width: 690rpx;
+			height: 80rpx;
+			line-height: 80rpx;
+			margin: 20rpx 30rpx;
+			background: #f9f9f9;
+			border-radius: 80rpx;
+			display: flex;
+
+			.left {
+				width: 140rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.text {
+					font-weight: 600;
+					font-size: 28rpx;
+					color: #28b389
+				}
+			}
+
+			.center {
+				flex: 1;
+
+				swiper {
+					height: 100%;
+
+					&-item {
+						height: 100%;
+						font-size: 30rpx;
+						color: #666;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+				}
+			}
+
+			.right {
+				width: 70rpx
 			}
 		}
 	}
