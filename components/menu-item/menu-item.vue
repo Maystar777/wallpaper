@@ -47,6 +47,7 @@
 
 <style lang="scss" scoped>
 	.menu-item {
+		background-color: #fff;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

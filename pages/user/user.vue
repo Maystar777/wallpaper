@@ -1,5 +1,5 @@
 <template>
-	<view class="user-layout">
+	<view class="user-layout page-bg">
 		<view class="user-info">
 			<view class="avator">
 				<image src="/static/images/logo.png" mode="aspectFill"></image>
