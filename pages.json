@@ -22,10 +22,16 @@
 			}
 		},
 		{
-			"path" : "pages/classifyList/classifyList",
-			"style" : 
-			{
-				"navigationBarTitleText" : "分类列表"
+			"path": "pages/classifyList/classifyList",
+			"style": {
+				"navigationBarTitleText": "分类列表"
+			}
+		},
+		{
+			"path": "pages/preview/preview",
+			"style": {
+				"navigationBarTitleText": "预览",
+				"navigationStyle": "custom"
 			}
 		}
 	],
@@ -33,7 +39,7 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "羽绘壁纸",
 		"navigationBarBackgroundColor": "#fff",
-		"backgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
 	},
 	"uniIdRouter": {},
 	"tabBar": {
