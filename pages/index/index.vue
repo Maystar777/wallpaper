@@ -50,7 +50,7 @@
 					专题精选
 				</template>
 				<template #custom>
-					<navigator url="/pages/classify/classify" class="more">More+</navigator>
+					<navigator url="/pages/classify/classify" open-type="switchTab" class="more">More+</navigator>
 				</template>
 			</common-title>
 
@@ -142,6 +142,7 @@
 				color: $brand-theme-color;
 				display: flex;
 				align-items: center;
+
 				:deep(.uni-icons) {
 					color: $brand-theme-color !important
 				}

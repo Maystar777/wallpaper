@@ -1,33 +1,37 @@
 <template>
-	<view class="menu-item">
-		<view class="left">
-			<uni-icons :type="icon" size="20" color="#28b389"></uni-icons>
-			<view class="text">
-				{{ name }}
+	<navigator :url="url" :open-type="openType">
+		<view class="menu-item">
+			<view class="left">
+				<uni-icons :type="icon" size="20" color="#28b389"></uni-icons>
+				<view class="text">
+					{{ name }}
+				</view>
 			</view>
-		</view>
-		<view class="right">
-			<view class="text">
-				{{ count }}
+			<view class="right">
+				<view class="text">
+					{{ count }}
+				</view>
+				<uni-icons type="right" size="18" color="#aaa"></uni-icons>
 			</view>
-			<uni-icons type="right" size="18" color="#aaa"></uni-icons>
+			<!-- #ifdef MP -->
+			<button v-if="type==='contact'" class="contact" open-type="contact">联系客服</button>
+			<!--  #endif -->
+			<!-- #ifndef MP -->
+			<button v-if="type==='contact'" class="contact" @click="onContact">拨打电话</button>
+			<!-- #endif -->
 		</view>
-		<!-- #ifdef MP -->
-		<button v-if="type==='contact'" class="contact" open-type="contact">联系客服</button>
-		<!--  #endif -->
-		<!-- #ifndef MP -->
-		<button v-if="type==='contact'" class="contact" @click="onContact">拨打电话</button>
-		<!-- #endif -->
-	</view>
+	</navigator>
 </template>
 
 <script setup>
-	defineProps({
+	const props = defineProps({
 		icon: {
 			type: String,
+			require: true
 		},
 		name: {
 			type: String,
+			require: true
 		},
 		count: {
 			type: Number,
@@ -35,7 +39,15 @@
 		type: {
 			type: String,
 			default: ''
-		}
+		},
+		url: {
+			type: String,
+			default: ''
+		},
+		openType: {
+			type: String,
+			default: 'navigate'
+		},
 	})
 
 	function onContact() {

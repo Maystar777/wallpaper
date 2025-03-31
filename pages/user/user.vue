@@ -13,14 +13,12 @@
 		</view>
 		<view class="section">
 			<view class="list">
-				<menu-item v-for="({icon, name, count, type},index) in menu1" :icon="icon" :name="name" :count="count"
-					:type="type"></menu-item>
-
+				<menu-item v-for="(item,index) in menu1" v-bind="item"></menu-item>
 			</view>
 		</view>
 		<view class="section">
 			<view class="list">
-				<menu-item v-for="({icon, name},index) in menu2" :icon="icon" :name="name"></menu-item>
+				<menu-item v-for="(item,index) in menu2" v-bind="item"></menu-item>
 			</view>
 		</view>
 	</view>
@@ -30,7 +28,8 @@
 	const menu1 = ref([{
 		icon: 'download-filled',
 		name: '我的下载',
-		count: 0
+		count: 0,
+		url: '/pages/classifyList/classifyList',
 	}, {
 		icon: 'star-filled',
 		name: '我的评分',

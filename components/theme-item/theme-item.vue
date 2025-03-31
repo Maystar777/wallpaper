@@ -1,6 +1,6 @@
 <template>
 	<view class="theme-item">
-		<navigator url="" class="box" v-if="!isMore">
+		<navigator url="/pages/classifyList/classifyList" class="box" v-if="!isMore">
 			<image class="pic" src="/common/images/classify2.jpg" aspectFill></image>
 			<view class="tab">
 				三天前更新
@@ -9,7 +9,7 @@
 				明星美女
 			</view>
 		</navigator>
-		<navigator url="" class="box more" v-else>
+		<navigator url="/pages/classify/classify" open-type="switchTab"  class="box more" v-else>
 			<image class="pic" src="/common/images/more.jpg" aspectFill></image>
 			<view class="mask">
 				<uni-icons type="more-filled" size="34" color="#fff"></uni-icons>
