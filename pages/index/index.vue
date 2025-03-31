@@ -10,7 +10,7 @@
 		</view>
 		<view class="notice">
 			<view class="left">
-				<uni-icons type="sound-filled" size="20" color="#28b389"></uni-icons>
+				<uni-icons type="sound-filled" size="20"></uni-icons>
 				<text class="text">公告</text>
 			</view>
 			<view class="center">
@@ -31,7 +31,7 @@
 				</template>
 				<template #custom>
 					<view class="date">
-						<uni-icons type="calendar" size="20" color="#28b389"></uni-icons>
+						<uni-icons type="calendar" size="20"></uni-icons>
 						<uni-dateformat :date="Date.now()" format='dd日'></uni-dateformat>
 					</view>
 				</template>
@@ -72,6 +72,7 @@
 		.banner {
 			width: 750rpx;
 			padding-top: 25rpx;
+
 			swiper {
 				width: 700rpx;
 				height: 340rpx;
@@ -100,10 +101,15 @@
 				justify-content: center;
 				align-items: center;
 
+				//vue3写法。  vue2用的是/deep/或::v-deep
+				:deep(.uni-icons) {
+					color: $brand-theme-color !important
+				}
+
 				.text {
 					font-weight: 600;
 					font-size: 28rpx;
-					color: #28b389
+					color: $brand-theme-color
 				}
 			}
 
@@ -133,9 +139,12 @@
 			padding-top: 20rpx;
 
 			.date {
-				color: #28b389;
+				color: $brand-theme-color;
 				display: flex;
 				align-items: center;
+				:deep(.uni-icons) {
+					color: $brand-theme-color !important
+				}
 			}
 
 			.content {

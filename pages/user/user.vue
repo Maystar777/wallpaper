@@ -86,10 +86,9 @@
 			width: 690rpx;
 			margin: 50rpx auto;
 			border: 1rpx solid #eee;
+			border-bottom: none;
 			border-radius: 10rpx;
 			box-shadow: 0 0 30rpx rgba(0, 0, 0, 0.05);
-
-			.list {}
 		}
 	}
 </style>
