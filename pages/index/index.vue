@@ -17,7 +17,9 @@
 			<view class="center">
 				<swiper vertical autoplay :interval="3000" :duration="1000" circular>
 					<swiper-item v-for="item in 4">
-						文字效果文字效果文字效果文字效果文字效果
+						<navigator url="/pages/notice/detail">
+							文字效果文字效果文字效果文字效果文字效果
+						</navigator>
 					</swiper-item>
 				</swiper>
 			</view>
@@ -39,7 +41,7 @@
 			</common-title>
 			<view class="content">
 				<scroll-view scroll-x="true">
-					<view class="box" v-for="item in 8">
+					<view class="box" v-for="item in 8" @click="goPreview">
 						<image src="/common/images/preview_small.webp" mode="aspectFill"></image>
 					</view>
 				</scroll-view>
@@ -54,18 +56,20 @@
 					<navigator url="/pages/classify/classify" open-type="switchTab" class="more">More+</navigator>
 				</template>
 			</common-title>
-
 			<view class="content">
 				<theme-item v-for="item in 8"></theme-item>
 				<theme-item :is-more="true"></theme-item>
-
 			</view>
 		</view>
 	</view>
 </template>
 
 <script setup>
-
+	function goPreview() {
+		uni.navigateTo({
+			url: '/pages/preview/preview'
+		})
+	}
 </script>
 
 <style lang="scss" scoped>

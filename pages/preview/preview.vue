@@ -6,8 +6,8 @@
 			</swiper-item>
 		</swiper>
 		<view class="mask" v-if="maskState">
-			<view class="go-back">
-
+			<view class="go-back" :style="{ top: getStatusBarHeight()+'px' }" @click="goBack()">
+				<uni-icons type="back" color="#fff" size="20"></uni-icons>
 			</view>
 			<view class="count">
 				3 / 9
@@ -108,6 +108,9 @@
 </template>
 
 <script setup>
+	import {
+		getStatusBarHeight,
+	} from '@/utils/system.js'
 	const maskState = ref(true)
 	const infoPopup = ref(null)
 
@@ -121,6 +124,10 @@
 
 	function onCloseInfo() {
 		infoPopup.value.close()
+	}
+
+	function goBack() {
+		uni.navigateBack()
 	}
 </script>
 
@@ -148,7 +155,18 @@
 				color: #fff;
 			}
 
-			.go-back {}
+			.go-back {
+				width: 38px;
+				height: 38px;
+				border-radius: 38px;
+				background: rgba(0, 0, 0, 0.5);
+				left: 60rpx;
+				backdrop-filter: blur(10rpx);
+				border: 1rpx solid rgba(255, 255, 255, 0.3);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 
 			.count {
 				top: 10vh;

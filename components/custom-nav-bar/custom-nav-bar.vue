@@ -60,7 +60,7 @@
 				.search {
 					padding: 8rpx 100rpx 8rpx 10rpx;
 					background: rgba(255, 255, 255, 0.7);
-					backdrop-filter: 20rpx;
+					backdrop-filter: blur(20rpx);
 					border-radius: 1em;
 					border: 1rpx solid #fff;
 
