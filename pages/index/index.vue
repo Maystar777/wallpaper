@@ -1,5 +1,6 @@
 <template>
 	<view class="home-layout page-bg">
+		<custom-nav-bar title="推荐"></custom-nav-bar>
 		<view class="banner">
 			<swiper indicator-dots autoplay :interval="3000" :duration="1000" indicator-color="rgba(255,255,255,0.5)"
 				indicator-active-color="#fff">
