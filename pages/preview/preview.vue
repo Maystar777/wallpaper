@@ -26,13 +26,13 @@
 						信息
 					</view>
 				</view>
-				<view class="box">
+				<view class="box" @click="onClickScore">
 					<uni-icons type="star" size="23"></uni-icons>
 					<view class="text">
-						5分
+						{{ currentInfo.score }}分
 					</view>
 				</view>
-				<view class="box">
+				<view class="box" @click="onClickDownLoad">
 					<uni-icons type="download" size="23"></uni-icons>
 					<view class="text">
 						下载
@@ -104,15 +104,44 @@
 				</scroll-view>
 			</view>
 		</uni-popup>
+		<uni-popup ref="scorePopup" :is-mask-click="false">
+			<view class="scorePopup">
+				<view class="popHeader">
+					<view></view>
+					<view class="title">{{ isScore? '评过分了~': '壁纸评分' }}</view>
+					<view class="close" @click="onCloseScore">
+						<uni-icons type="closeempty" size="18" color="#999"></uni-icons>
+					</view>
+				</view>
+
+				<view class="content">
+					<uni-rate v-model="userScore" allowHalf :disabled="isScore" />
+					<text class="text">{{userScore}}分</text>
+				</view>
+
+				<view class="footer">
+					<button @click="submitScore" :disabled="!userScore || isScore" type="default" size="mini"
+						plain>确认评分</button>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script setup>
 	import {
+		apiSetScore
+	} from '/api/api.js'
+	import {
 		getStatusBarHeight,
 	} from '@/utils/system.js'
 	const maskState = ref(true)
+
 	const infoPopup = ref(null)
+	const scorePopup = ref(null);
+	const userScore = ref(0)
+	const isScore = ref(false)
+
 	const wallpaperList = ref([])
 	const currentId = ref(null)
 	const currentIndex = ref(0)
@@ -160,6 +189,114 @@
 
 	function onCloseInfo() {
 		infoPopup.value.close()
+	}
+
+
+	//评分弹窗
+	const onClickScore = () => {
+		if (currentInfo.value.userScore) {
+			isScore.value = true
+			userScore.value = currentInfo.value.userScore
+		}
+		scorePopup.value.open();
+	}
+	//关闭评分框
+	const onCloseScore = () => {
+		scorePopup.value.close()
+		userScore.value = 0
+		isScore.value = false
+	}
+
+	//确认评分
+	const submitScore = () => {
+		uni.showLoading({
+			title: '加载中...'
+		})
+		const {
+			classid,
+			_id: wallId
+		} = currentInfo.value
+		apiSetScore({
+			userScore: userScore.value,
+			classid,
+			wallId
+		}).then(res => {
+			uni.hideLoading()
+			if (res.errCode === 0) {
+				uni.showToast({
+					title: '评分成功！',
+				})
+				wallpaperList.value[currentIndex.value].userScore = userScore.value
+				uni.setStorageSync("storeWallpaperList", wallpaperList.value)
+				onCloseScore()
+			}
+		})
+	}
+
+	const onClickDownLoad = () => {
+		// #ifdef H5
+		uni.showModal({
+			content: "请长按后保存壁纸",
+			showCancel: false
+		})
+		// #endif
+		// #ifndef H5
+		uni.showLoading({
+			title: '下载中',
+			mask: true
+		})
+		uni.getImageInfo({
+			src: currentInfo.value.picurl,
+			success: (res) => {
+				uni.saveImageToPhotosAlbum({
+					filePath: res.path,
+					success: () => {
+						uni.showToast({
+							title: '保存成功！'
+						});
+					},
+					fail: err => {
+						if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
+							uni.showToast({
+								title: '保存失败，请重新点击下载',
+								icon: 'none'
+							})
+							return
+						}
+						uni.showModal({
+							title: '授权提示',
+							content: '需要授权保存相册',
+							success: res => {
+								if (res.confirm) {
+									uni.openSetting({
+										success(setting) {
+											if (setting.authSetting[
+													'scope.writePhotosAlbum'
+												]) {
+												uni.showToast({
+													title: '获取授权成功',
+													icon: 'none'
+												})
+											} else {
+												uni.showToast({
+													title: '获取授权失败',
+													icon: 'none'
+												})
+											}
+										}
+									})
+								}
+							}
+						})
+					},
+					complete: () => {
+						uni.hideLoading()
+					}
+				});
+			}
+		})
+
+		// #endif
 	}
 
 	function goBack() {
@@ -333,6 +470,41 @@
 						line-height: 1.6em;
 					}
 				}
+			}
+		}
+
+		.scorePopup {
+			background: #fff;
+			padding: 30rpx;
+			width: 70vw;
+			border-radius: 30rpx;
+
+			.popHeader {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.content {
+				padding: 30rpx 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.text {
+					color: #FFCA3E;
+					padding-left: 10rpx;
+					width: 80rpx;
+					line-height: 1em;
+					text-align: right;
+				}
+			}
+
+			.footer {
+				padding: 10rpx 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 		}
 	}
