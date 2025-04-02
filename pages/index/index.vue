@@ -4,8 +4,8 @@
 		<view class="banner">
 			<swiper indicator-dots autoplay :interval="3000" :duration="1000" indicator-color="rgba(255,255,255,0.5)"
 				indicator-active-color="#fff">
-				<swiper-item v-for="item in 3">
-					<image src="/common/images/banner1.jpg" mode="aspectFill"></image>
+				<swiper-item v-for="item in bannerList" :key="item._id">
+					<image :src="item.picurl" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -16,9 +16,9 @@
 			</view>
 			<view class="center">
 				<swiper vertical autoplay :interval="3000" :duration="1000" circular>
-					<swiper-item v-for="item in 4">
+					<swiper-item v-for="item in noticeList" :key="item._id">
 						<navigator url="/pages/notice/detail">
-							文字效果文字效果文字效果文字效果文字效果
+							{{ item.title }}
 						</navigator>
 					</swiper-item>
 				</swiper>
@@ -41,8 +41,8 @@
 			</common-title>
 			<view class="content">
 				<scroll-view scroll-x="true">
-					<view class="box" v-for="item in 8" @click="goPreview">
-						<image src="/common/images/preview_small.webp" mode="aspectFill"></image>
+					<view class="box" v-for="item in randomList" :key="item._id" @click="goPreview">
+						<image :src="item.smallPicurl" mode="aspectFill"></image>
 					</view>
 				</scroll-view>
 			</view>
@@ -57,7 +57,7 @@
 				</template>
 			</common-title>
 			<view class="content">
-				<theme-item v-for="item in 8"></theme-item>
+				<theme-item v-for="item in classifyList" :key="item._id" :item="item"></theme-item>
 				<theme-item :is-more="true"></theme-item>
 			</view>
 		</view>
@@ -65,7 +65,49 @@
 </template>
 
 <script setup>
-	function goPreview() {
+	import {
+		apiGetBanner,
+		apiGetDayRandom,
+		apiGetNotice,
+		apiGetClassify
+	} from '../../api/api.js'
+	const bannerList = ref([])
+	const randomList = ref([])
+	const noticeList = ref([])
+	const classifyList = ref([])
+
+	onMounted(() => {
+		getBanner()
+		getDayRandom()
+		getNotice()
+		getClassify()
+	})
+
+	const getBanner = async () => {
+		let res = await apiGetBanner()
+		bannerList.value = res.data
+	}
+
+	const getDayRandom = async () => {
+		let res = await apiGetDayRandom()
+		randomList.value = res.data
+	}
+
+	const getNotice = async () => {
+		let res = await apiGetNotice({
+			select: true
+		})
+		noticeList.value = res.data
+	}
+	
+	const getClassify = async () => {
+		let res = await apiGetClassify({
+			select: true
+		})
+		classifyList.value = res.data
+	}
+
+	const goPreview = () => {
 		uni.navigateTo({
 			url: '/pages/preview/preview'
 		})

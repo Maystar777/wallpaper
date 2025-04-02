@@ -1,15 +1,15 @@
 <template>
 	<view class="theme-item">
-		<navigator url="/pages/classifyList/classifyList" class="box" v-if="!isMore">
-			<image class="pic" src="/common/images/classify2.jpg" aspectFill></image>
+		<navigator :url="`/pages/classifyList/classifyList?id=${item._id}&name=${item.name}`" class="box" v-if="!isMore">
+			<image class="pic" :src="item.picurl" aspectFill></image>
 			<view class="tab">
-				三天前更新
+				{{ formatTimeAgo(item.updateTime) }}前更新
 			</view>
 			<view class="mask">
-				明星美女
+				{{ item.name }}
 			</view>
 		</navigator>
-		<navigator url="/pages/classify/classify" open-type="switchTab"  class="box more" v-else>
+		<navigator url="/pages/classify/classify" open-type="switchTab" class="box more" v-else>
 			<image class="pic" src="/common/images/more.jpg" aspectFill></image>
 			<view class="mask">
 				<uni-icons type="more-filled" size="34" color="#fff"></uni-icons>
@@ -20,7 +20,21 @@
 </template>
 
 <script setup>
+	import {
+		formatTimeAgo
+	} from '../../utils/common.js'
 	defineProps({
+		item: {
+			type: Object,
+			default: () => {
+				return {
+					_id: '',
+					name: '',
+					picurl: '',
+					updateTime: ''
+				}
+			}
+		},
 		isMore: {
 			type: Boolean,
 			default: false
