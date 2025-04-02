@@ -1,8 +1,8 @@
 <template>
 	<view class="preview">
-		<swiper circular>
-			<swiper-item v-for="item in 10">
-				<image @click="maskChange" src="/common/images/preview1.jpg" mode="aspectFill"></image>
+		<swiper circular :current="currentIndex" @change="onSwiperChange">
+			<swiper-item v-for="(item,index) in wallpaperList" :key="item._id">
+				<image v-if="readImg.has(index)" @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		<view class="mask" v-if="maskState">
@@ -10,7 +10,7 @@
 				<uni-icons type="back" color="#fff" size="20"></uni-icons>
 			</view>
 			<view class="count">
-				3 / 9
+				{{ currentIndex+1 }} / {{ wallpaperList.length }}
 			</view>
 			<view class="time">
 				<uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
@@ -57,43 +57,43 @@
 							<view class="label">
 								壁纸ID：
 							</view>
-							<text user-select selectable
-								class="value">1111111112111111111211111111121111111112111111111211111111121111111112</text>
+							<text user-select selectable class="value">{{ currentInfo._id }}</text>
 						</view>
-						<view class="row">
+						<!-- <view class="row">
 							<view class="label">
 								分类：
 							</view>
-							<text class="value classify">帅哥美女</text>
-						</view>
+							<text class="value classify"></text>
+						</view> -->
 						<view class="row">
 							<view class="label">
 								发布者：
 							</view>
-							<text class="value">小猫爱吃鱼</text>
+							<text class="value">{{ currentInfo.nickname }}</text>
 						</view>
 						<view class="row">
 							<view class="label">
 								评分：
 							</view>
-							<uni-rate :readonly="true" :touchable="false" :value="3.5" size="16" />
+							<view class="value score-box">
+								<uni-rate :readonly="true" :touchable="false" :value="currentInfo.score" size="16" />
+								<text class="score">{{currentInfo.score}}分</text>
+							</view>
+
 						</view>
 						<view class="row">
 							<view class="label">
 								摘要：
 							</view>
-							<text class="value">小猫爱吃鱼</text>
+							<text class="value">{{ currentInfo.description }}</text>
 						</view>
 						<view class="row">
 							<view class="label">
 								标签：
 							</view>
 							<view class="tags">
-								<view class="tag">
-									可爱
-								</view>
-								<view class="tag">
-									性感
+								<view class="tag" v-for="(item, index) in currentInfo.tabs" :key="index">
+									{{ item }}
 								</view>
 							</view>
 						</view>
@@ -113,6 +113,42 @@
 	} from '@/utils/system.js'
 	const maskState = ref(true)
 	const infoPopup = ref(null)
+	const wallpaperList = ref([])
+	const currentId = ref(null)
+	const currentIndex = ref(0)
+	const currentInfo = ref({})
+	const readImg = ref(new Set())
+
+	onLoad((e) => {
+		currentId.value = e.id
+		initData()
+	})
+
+	function initData() {
+		const storeWallpaperList = uni.getStorageSync('storeWallpaperList') || []
+		wallpaperList.value = storeWallpaperList.map(item => {
+			return {
+				...item,
+				picurl: item.smallPicurl.replace("_small.webp", ".jpg")
+			}
+		})
+		currentIndex.value = wallpaperList.value.findIndex(item => item._id === currentId.value)
+		currentInfo.value = wallpaperList.value[currentIndex.value]
+		addReadImgs()
+	}
+
+	function onSwiperChange(e) {
+		currentIndex.value = e.detail.current
+		currentInfo.value = wallpaperList.value[currentIndex.value]
+		addReadImgs()
+	}
+
+	function addReadImgs() {
+		const length = wallpaperList.value.length
+		readImg.value.add(currentIndex.value)
+		readImg.value.add((currentIndex.value - 1 + length) % length)
+		readImg.value.add((currentIndex.value + 1) % length)
+	}
 
 	function maskChange() {
 		maskState.value = !maskState.value
@@ -245,7 +281,6 @@
 				.content {
 					.row {
 						display: flex;
-						align-items: center;
 						padding: 16rpx 0;
 						font-size: 32rpx;
 						line-height: 1.7em;
@@ -262,6 +297,13 @@
 							width: 0; //?
 						}
 
+						.score-box {
+							display: flex;
+							align-items: center;
+							gap: 20rpx;
+							color: $text-font-color-2;
+						}
+
 						.classify {
 							color: $brand-theme-color;
 						}
@@ -274,9 +316,8 @@
 								border: 1px solid $brand-theme-color;
 								color: $brand-theme-color;
 								font-size: 22rpx;
-								padding: 10rpx 30rpx;
+								padding: 0rpx 20rpx;
 								border-radius: 40rpx;
-								line-height: 1em;
 								margin-right: 10rpx;
 							}
 						}

@@ -18,7 +18,7 @@
 		})
 		classifyList.value = res.data
 	}
-	onMounted(() => {
+	onLoad(() => {
 		getClassify()
 	})
 </script>

@@ -76,7 +76,7 @@
 	const noticeList = ref([])
 	const classifyList = ref([])
 
-	onMounted(() => {
+	onLoad(() => {
 		getBanner()
 		getDayRandom()
 		getNotice()

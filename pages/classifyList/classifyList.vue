@@ -4,7 +4,8 @@
 			<uni-load-more status="loading"></uni-load-more>
 		</view>
 		<view class="content">
-			<navigator url="" class="item" v-for="item in wallpaperList" :key="item._id">
+			<navigator :url="`/pages/preview/preview?id=${item._id}`" class="item" v-for="item in wallpaperList"
+				:key="item._id">
 				<image :src="item.smallPicurl" mode="aspectFill"></image>
 			</navigator>
 		</view>
@@ -45,6 +46,7 @@
 			noData.value = true
 		}
 		wallpaperList.value = [...wallpaperList.value, ...res.data]
+		uni.setStorageSync('storeWallpaperList', wallpaperList.value)
 	}
 </script>
 
