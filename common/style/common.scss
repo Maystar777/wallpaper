@@ -7,3 +7,11 @@ view, , swiper-item{
 		linear-gradient(to right, #a8e6cf, #dcedc1);
 	min-height: 80vh;
 }
+
+.loading-layout{
+	padding: 30rpx 0;
+}
+
+.safe-area-inset-bottom{
+	height: env(safe-area-inset-bottom); //安全区域高度的环境变量
+}
