@@ -54,10 +54,12 @@
 	}, ])
 	const menu2 = ref([{
 		icon: 'notification-filled',
-		name: '订阅更新'
+		name: '订阅更新',
+		url: '/pages/notice/detail?id=653507c6466d417a3718e94b&name=订阅更新',
 	}, {
 		icon: 'flag-filled',
-		name: '常见问题'
+		name: '常见问题',
+		url: '/pages/notice/detail?id=6536358ce0ec19c8d67fbe82&name=常见问题',
 	}, ])
 
 	const userInfo = ref(null)

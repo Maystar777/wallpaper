@@ -38,6 +38,11 @@
 	}
 	onLoad((e) => {
 		getNoticeDetail(e.id)
+		if (e.name) {
+			uni.setNavigationBarTitle({
+				title: e.name
+			})
+		}
 	})
 </script>
 
