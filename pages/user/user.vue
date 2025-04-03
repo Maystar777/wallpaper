@@ -1,5 +1,6 @@
 <template>
-	<view class="user-layout page-bg">
+	<view class="user-layout page-bg" v-if="userInfo">
+		<view :style="{ height: getNavBarHeight()+'px' }"></view>
 		<view class="user-info">
 			<view class="avator">
 				<image src="/static/images/logo.png" mode="aspectFill"></image>
@@ -8,7 +9,7 @@
 				落日繁星
 			</view>
 			<view class="address">
-				来自于：福建
+				来自于：{{ userInfo?.address?.city ||userInfo?.address?.province || userInfo?.address?.country }}
 			</view>
 		</view>
 		<view class="section">
@@ -22,17 +23,29 @@
 			</view>
 		</view>
 	</view>
+	<view class="loading-layout" v-else>
+		<view :style="{ height: getNavBarHeight()+'px' }"></view>
+		<uni-load-more status="loading"></uni-load-more>
+	</view>
 </template>
 
 <script setup>
+	import {
+		getNavBarHeight
+	} from '/utils/system.js'
+	import {
+		apiUserInfo
+	} from '../../api/api.js'
+
 	const menu1 = ref([{
 		icon: 'download-filled',
 		name: '我的下载',
 		count: 0,
-		url: '/pages/classifyList/classifyList',
+		url: '/pages/classifyList/classifyList?name=我的下载&type=download',
 	}, {
 		icon: 'star-filled',
 		name: '我的评分',
+		url: '/pages/classifyList/classifyList?name=我的评分&type=score',
 		count: 0
 	}, {
 		icon: 'chatboxes-filled',
@@ -46,6 +59,16 @@
 		icon: 'flag-filled',
 		name: '常见问题'
 	}, ])
+
+	const userInfo = ref(null)
+	const getUserInfo = () => {
+		apiUserInfo().then(res => {
+			userInfo.value = res.data
+			menu1.value[0].count = userInfo.value?.downloadSize
+			menu1.value[1].count = userInfo.value?.scoreSize
+		})
+	}
+	getUserInfo()
 </script>
 
 <style lang="scss" scoped>

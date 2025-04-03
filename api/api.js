@@ -57,10 +57,23 @@ export const apiDetailWall = async (data) => {
 	})
 }
 
-export const apiUserInfo= async (data) => {
+export const apiUserInfo = async (data) => {
 	return request({
 		url: 'userInfo',
 		data
 	})
 }
 
+export const apiUserWallList = async (data) => {
+	return request({
+		url: 'userWallList',
+		data
+	})
+}
+
+export const apiNoticeList = async (data) => {
+	return request({
+		url: 'wallNewsDetail',
+		data
+	})
+}

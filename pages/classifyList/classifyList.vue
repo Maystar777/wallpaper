@@ -21,7 +21,8 @@
 		goHome
 	} from '../../utils/common.js'
 	import {
-		apiGetWallList
+		apiGetWallList,
+		apiUserWallList
 	} from '../../api/api.js'
 	const wallpaperList = ref([])
 	const noData = ref(false)
@@ -36,7 +37,8 @@
 				goHome()
 				return
 			}
-			queryParam.classid = e.id
+			if (e.type) queryParam.type = e.type
+			if (e.id) queryParam.classid = e.id
 			getWallList()
 			uni.setNavigationBarTitle({
 				title: e.name
@@ -50,7 +52,8 @@
 		getWallList()
 	})
 	const getWallList = async () => {
-		let res = await apiGetWallList(queryParam)
+		let func = queryParam.type ? apiUserWallList : apiGetWallList
+		let res = await func(queryParam)
 		if (res.data?.length < queryParam.pageSize) {
 			noData.value = true
 		}
