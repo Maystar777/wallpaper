@@ -17,7 +17,7 @@
 			<view class="center">
 				<swiper vertical autoplay :interval="3000" :duration="1000" circular>
 					<swiper-item v-for="item in noticeList" :key="item._id">
-						<navigator url="/pages/notice/detail">
+						<navigator :url="`/pages/notice/detail?id=${item._id}`">
 							{{ item.title }}
 						</navigator>
 					</swiper-item>
@@ -94,9 +94,7 @@
 	}
 
 	const getNotice = async () => {
-		let res = await apiGetNotice({
-			select: true
-		})
+		let res = await apiGetNotice()
 		noticeList.value = res.data
 	}
 

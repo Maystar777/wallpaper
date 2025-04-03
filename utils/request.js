@@ -1,4 +1,4 @@
-const accessKey = '474441' // 'yuhuiwallpaper@'
+const accessKey = '880596' // 'yuhuiwallpaper@'
 const BASE_URL = 'https://tea.qingnian8.com/api/bizhi/'
 
 export function request(option = {}) {
