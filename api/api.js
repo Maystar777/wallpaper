@@ -77,3 +77,10 @@ export const apiNoticeList = async (data) => {
 		data
 	})
 }
+
+export const apiSearchWall = async (data) => {
+	return request({
+		url: 'searchWall',
+		data
+	})
+}
