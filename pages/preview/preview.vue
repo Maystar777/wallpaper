@@ -130,7 +130,8 @@
 
 <script setup>
 	import {
-		apiSetScore
+		apiSetScore,
+		apiWriteDownload
 	} from '/api/api.js'
 	import {
 		getStatusBarHeight,
@@ -233,7 +234,7 @@
 		})
 	}
 
-	const onClickDownLoad = () => {
+	const onClickDownLoad = async () => {
 		// #ifdef H5
 		uni.showModal({
 			content: "请长按后保存壁纸",
@@ -241,10 +242,31 @@
 		})
 		// #endif
 		// #ifndef H5
-		uni.showLoading({
-			title: '下载中',
-			mask: true
-		})
+		try {
+			uni.showLoading({
+				title: '下载中',
+				mask: true
+			})
+			// 调用接口，可以防止5秒内重复点击
+			const {
+				classid,
+				_id: wallId
+			} = currentInfo.value
+			let res = await apiWriteDownload({
+				classid,
+				wallId
+			})
+			if (res.errCode !== 0) throw res
+			// 保存到相册
+			saveImageToAlbum()
+		} catch (error) {
+			uni.hideLoading()
+		}
+		// #endif
+	}
+
+	const saveImageToAlbum = () => {
+		// 获取一个临时地址
 		uni.getImageInfo({
 			src: currentInfo.value.picurl,
 			success: (res) => {
@@ -256,6 +278,7 @@
 						});
 					},
 					fail: err => {
+						// 已获得权限，但未点击确定保存
 						if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
 							uni.showToast({
 								title: '保存失败，请重新点击下载',
@@ -263,31 +286,8 @@
 							})
 							return
 						}
-						uni.showModal({
-							title: '授权提示',
-							content: '需要授权保存相册',
-							success: res => {
-								if (res.confirm) {
-									uni.openSetting({
-										success(setting) {
-											if (setting.authSetting[
-													'scope.writePhotosAlbum'
-												]) {
-												uni.showToast({
-													title: '获取授权成功',
-													icon: 'none'
-												})
-											} else {
-												uni.showToast({
-													title: '获取授权失败',
-													icon: 'none'
-												})
-											}
-										}
-									})
-								}
-							}
-						})
+						// 未获得权限，需弹框询问
+						getAlbumAuth()
 					},
 					complete: () => {
 						uni.hideLoading()
@@ -296,7 +296,26 @@
 			}
 		})
 
-		// #endif
+	}
+	const getAlbumAuth = () => {
+		uni.showModal({
+			title: '授权提示',
+			content: '需要授权保存相册',
+			success: res => {
+				if (res.confirm) {
+					uni.openSetting({
+						success: (setting) => {
+							uni.showToast({
+								title: setting.authSetting['scope.writePhotosAlbum'] ?
+									'获取授权成功' : '获取授权失败',
+								icon: 'none'
+							})
+						}
+					})
+				}
+			}
+		})
+
 	}
 
 	function goBack() {

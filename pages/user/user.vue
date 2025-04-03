@@ -13,12 +13,12 @@
 		</view>
 		<view class="section">
 			<view class="list">
-				<menu-item v-for="(item,index) in menu1" v-bind="item"></menu-item>
+				<menu-item v-for="(item,index) in menu1" :key="item.name" v-bind="item"></menu-item>
 			</view>
 		</view>
 		<view class="section">
 			<view class="list">
-				<menu-item v-for="(item,index) in menu2" v-bind="item"></menu-item>
+				<menu-item v-for="(item,index) in menu2" :key="item.name" v-bind="item"></menu-item>
 			</view>
 		</view>
 	</view>

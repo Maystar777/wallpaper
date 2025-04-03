@@ -39,7 +39,12 @@ export const apiGetWallList = async (data) => {
 export const apiSetScore = async (data) => {
 	return request({
 		url: 'setupScore',
-		// method: 'post',
+		data
+	})
+}
+export const apiWriteDownload = async (data) => {
+	return request({
+		url: 'downloadWall',
 		data
 	})
 }
