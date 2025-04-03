@@ -21,6 +21,20 @@
 	onLoad(() => {
 		getClassify()
 	})
+
+	// 分享给好友
+	onShareAppMessage((res) => {
+		return {
+			title: '【羽绘壁纸】精选分类',
+			path: '/pages/classify/classify'
+		}
+	})
+	// 分享到朋友圈
+	onShareTimeline((res) => {
+		return {
+			title: '【羽绘壁纸】精选分类',
+		}
+	})
 </script>
 
 <style lang="scss" scoped>

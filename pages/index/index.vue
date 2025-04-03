@@ -99,7 +99,7 @@
 		})
 		noticeList.value = res.data
 	}
-	
+
 	const getClassify = async () => {
 		let res = await apiGetClassify({
 			select: true
@@ -107,11 +107,27 @@
 		classifyList.value = res.data
 	}
 
+	// 跳转到预览页
 	const goPreview = () => {
 		uni.navigateTo({
 			url: '/pages/preview/preview'
 		})
 	}
+	// 分享给好友
+	onShareAppMessage((res) => {
+		return {
+			title: '羽绘壁纸',
+			path: '/pages/index/index'
+		}
+	})
+	// 分享到朋友圈
+	onShareTimeline((res) => {
+		return {
+			title: '羽绘壁纸',
+			// path: '/pages/index/index'
+			imageurl: bannerList.value[0]?.picurl
+		}
+	})
 </script>
 
 <style lang="scss" scoped>

@@ -131,7 +131,8 @@
 <script setup>
 	import {
 		apiSetScore,
-		apiWriteDownload
+		apiWriteDownload,
+		apiDetailWall
 	} from '/api/api.js'
 	import {
 		getStatusBarHeight,
@@ -149,13 +150,17 @@
 	const currentInfo = ref({})
 	const readImg = ref(new Set())
 
-	onLoad((e) => {
+	onLoad(async (e) => {
 		currentId.value = e.id
-		initData()
-	})
-
-	function initData() {
-		const storeWallpaperList = uni.getStorageSync('storeWallpaperList') || []
+		let storeWallpaperList = []
+		if (e.type === 'share') {
+			let res = await apiDetailWall({
+				id: e.id
+			})
+			storeWallpaperList = res.data || []
+		} else {
+			storeWallpaperList = uni.getStorageSync('storeWallpaperList') || []
+		}
 		wallpaperList.value = storeWallpaperList.map(item => {
 			return {
 				...item,
@@ -165,7 +170,7 @@
 		currentIndex.value = wallpaperList.value.findIndex(item => item._id === currentId.value)
 		currentInfo.value = wallpaperList.value[currentIndex.value]
 		addReadImgs()
-	}
+	})
 
 	function onSwiperChange(e) {
 		currentIndex.value = e.detail.current
@@ -319,8 +324,29 @@
 	}
 
 	function goBack() {
-		uni.navigateBack()
+		uni.navigateBack({
+			fail: err => {
+				uni.reLaunch({
+					url: '/pages/index/index'
+				})
+			}
+		})
 	}
+	// 分享给好友
+	onShareAppMessage((res) => {
+		debugger
+		return {
+			title: `【羽绘壁纸】`,
+			path: `/pages/preview/preview?id=${currentId.value}&type=share`
+		}
+	})
+	// 分享到朋友圈
+	onShareTimeline((res) => {
+		return {
+			title: `【羽绘壁纸】`,
+			query: `id=${currentId.value}&type=share`
+		}
+	})
 </script>
 
 <style lang="scss" scoped>

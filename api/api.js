@@ -42,9 +42,17 @@ export const apiSetScore = async (data) => {
 		data
 	})
 }
+
 export const apiWriteDownload = async (data) => {
 	return request({
 		url: 'downloadWall',
+		data
+	})
+}
+
+export const apiDetailWall = async (data) => {
+	return request({
+		url: 'detailWall',
 		data
 	})
 }

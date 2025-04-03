@@ -26,6 +26,7 @@
 		pageNum: 1,
 		pageSize: 12
 	}
+	let pageName = '分类列表'
 	onLoad(
 		e => {
 			queryParam.classid = e.id
@@ -33,6 +34,7 @@
 			uni.setNavigationBarTitle({
 				title: e.name
 			})
+			pageName = e.name
 		}
 	)
 	onReachBottom(() => {
@@ -48,6 +50,25 @@
 		wallpaperList.value = [...wallpaperList.value, ...res.data]
 		uni.setStorageSync('storeWallpaperList', wallpaperList.value)
 	}
+
+	onUnload(() => {
+		uni.removeStorageSync('storeWallpaperList')
+	})
+
+	// 分享给好友
+	onShareAppMessage((res) => {
+		return {
+			title: `【羽绘壁纸】${pageName}`,
+			path: `/pages/classifyList/classifyList?id=${queryParam.classid}&name=${pageName}`
+		}
+	})
+	// 分享到朋友圈
+	onShareTimeline((res) => {
+		return {
+			title: `【羽绘壁纸】${pageName}`,
+			query: `id=${queryParam.classid}&name=${pageName}`
+		}
+	})
 </script>
 
 <style lang="scss" scoped>
