@@ -56,3 +56,11 @@ export const apiDetailWall = async (data) => {
 		data
 	})
 }
+
+export const apiUserInfo= async (data) => {
+	return request({
+		url: 'userInfo',
+		data
+	})
+}
+

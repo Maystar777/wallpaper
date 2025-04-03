@@ -18,6 +18,9 @@
 
 <script setup>
 	import {
+		goHome
+	} from '../../utils/common.js'
+	import {
 		apiGetWallList
 	} from '../../api/api.js'
 	const wallpaperList = ref([])
@@ -29,6 +32,10 @@
 	let pageName = '分类列表'
 	onLoad(
 		e => {
+			if (!e.id) {
+				goHome()
+				return
+			}
 			queryParam.classid = e.id
 			getWallList()
 			uni.setNavigationBarTitle({

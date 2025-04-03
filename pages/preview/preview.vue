@@ -40,7 +40,7 @@
 				</view>
 			</view>
 		</view>
-		<uni-popup ref="infoPopup">
+		<uni-popup ref="infoPopup" background-color="#fff">
 			<view class="infoPopup">
 				<view class="popHeader">
 					<view></view>

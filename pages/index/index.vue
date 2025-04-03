@@ -41,7 +41,7 @@
 			</common-title>
 			<view class="content">
 				<scroll-view scroll-x="true">
-					<view class="box" v-for="item in randomList" :key="item._id" @click="goPreview">
+					<view class="box" v-for="item in randomList" :key="item._id" @click="goPreview(item._id)">
 						<image :src="item.smallPicurl" mode="aspectFill"></image>
 					</view>
 				</scroll-view>
@@ -108,9 +108,10 @@
 	}
 
 	// 跳转到预览页
-	const goPreview = () => {
+	const goPreview = (id) => {
+		uni.setStorageSync('storeWallpaperList', randomList.value)
 		uni.navigateTo({
-			url: '/pages/preview/preview'
+			url: `/pages/preview/preview?id=${id}`
 		})
 	}
 	// 分享给好友
