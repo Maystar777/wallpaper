@@ -33,12 +33,14 @@
 	let pageName = '分类列表'
 	onLoad(
 		e => {
-			if (!e.id) {
+
+			if (e.type) queryParam.type = e.type
+			else if (e.id) queryParam.classid = e.id
+			else {
 				goHome()
 				return
 			}
-			if (e.type) queryParam.type = e.type
-			if (e.id) queryParam.classid = e.id
+
 			getWallList()
 			uni.setNavigationBarTitle({
 				title: e.name

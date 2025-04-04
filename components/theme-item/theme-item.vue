@@ -1,8 +1,9 @@
 <template>
 	<view class="theme-item">
-		<navigator :url="`/pages/classifyList/classifyList?id=${item._id}&name=${item.name}`" class="box" v-if="!isMore">
+		<navigator :url="`/pages/classifyList/classifyList?id=${item._id}&name=${item.name}`" class="box"
+			v-if="!isMore">
 			<image class="pic" :src="item.picurl" aspectFill></image>
-			<view class="tab">
+			<view class="tab" v-if="formatTimeAgo(item.updateTime)">
 				{{ formatTimeAgo(item.updateTime) }}前更新
 			</view>
 			<view class="mask">

@@ -252,7 +252,7 @@
 				title: '下载中',
 				mask: true
 			})
-			// 调用接口，可以防止5秒内重复点击
+			// 调用接口，防止5秒内重复点击 & 更新下载数量
 			const {
 				classid,
 				_id: wallId
@@ -277,7 +277,7 @@
 			success: (res) => {
 				uni.saveImageToPhotosAlbum({
 					filePath: res.path,
-					success: () => {
+					success: async () => {
 						uni.showToast({
 							title: '保存成功！'
 						});

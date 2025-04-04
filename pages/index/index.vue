@@ -5,7 +5,13 @@
 			<swiper indicator-dots autoplay :interval="3000" :duration="1000" indicator-color="rgba(255,255,255,0.5)"
 				indicator-active-color="#fff">
 				<swiper-item v-for="item in bannerList" :key="item._id">
-					<image :src="item.picurl" mode="aspectFill"></image>
+					<navigator v-if="item.target === 'miniProgram'" target='miniProgram' :app-id="item.appid"
+						class="link" :url="`/pages/classifyList/classifyList?${item.url}`">
+						<image :src="item.picurl" mode="aspectFill"></image>
+					</navigator>
+					<navigator v-else class="link" :url="`/pages/classifyList/classifyList?${item.url}`">
+						<image :src="item.picurl" mode="aspectFill"></image>
+					</navigator>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -85,7 +91,12 @@
 
 	const getBanner = async () => {
 		let res = await apiGetBanner()
-		bannerList.value = res.data
+		// #ifdef MP-WEIXIN
+		bannerList.value = res.data || []
+		// #endif
+		// #ifndef MP-WEIXIN
+		bannerList.value = (res.data || []).filter(item => item.target !== 'miniProgram')
+		// #endif
 	}
 
 	const getDayRandom = async () => {
@@ -140,10 +151,15 @@
 				height: 340rpx;
 				margin: 0 auto;
 
-				image {
+				.link {
 					width: 100%;
 					height: 100%;
-					border-radius: 10rpx;
+
+					image {
+						width: 100%;
+						height: 100%;
+						border-radius: 10rpx;
+					}
 				}
 			}
 		}
