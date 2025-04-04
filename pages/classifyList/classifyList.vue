@@ -1,6 +1,8 @@
 <template>
+	<!-- 某分类详情列表页 -->
 	<view class="classify-list-layout">
-		<view class="loading-layout" v-if="!wallpaperList?.length && !noData">
+		<!-- 顶部loading，用于初始化 -->
+		<view class="loading-layout" v-if="!wallpaperList?.length && !noMore">
 			<uni-load-more status="loading"></uni-load-more>
 		</view>
 		<view class="content">
@@ -9,9 +11,11 @@
 				<image :src="item.smallPicurl" mode="aspectFill"></image>
 			</navigator>
 		</view>
-		<view class="loading-layout" v-if="wallpaperList?.length || noData">
-			<uni-load-more :status="noData?'noMore':'loading'"></uni-load-more>
+		<!-- 底部loading，用于触底加载新内容 -->
+		<view class="loading-layout" v-if="wallpaperList?.length || noMore">
+			<uni-load-more :status="noMore?'noMore':'loading'"></uni-load-more>
 		</view>
+		<!-- 安全区域，根据环境变量设置高度 -->
 		<view class="safe-area-inset-bottom"></view>
 	</view>
 </template>
@@ -24,23 +28,24 @@
 		apiGetWallList,
 		apiUserWallList
 	} from '../../api/api.js'
-	const wallpaperList = ref([])
-	const noData = ref(false)
+
+	const wallpaperList = ref([]) //壁纸数据列表
+	const noMore = ref(false) //是否还有更多数据
 	const queryParam = {
 		pageNum: 1,
 		pageSize: 12
 	}
 	let pageName = '分类列表'
+
+	// 根据query传参初始化数据
 	onLoad(
 		e => {
-
 			if (e.type) queryParam.type = e.type
 			else if (e.id) queryParam.classid = e.id
-			else {
+			else { //参数有误返回主页
 				goHome()
 				return
 			}
-
 			getWallList()
 			uni.setNavigationBarTitle({
 				title: e.name
@@ -48,21 +53,26 @@
 			pageName = e.name
 		}
 	)
+
+	// 触底拉取下一页数据
 	onReachBottom(() => {
-		if (noData.value) return
+		if (noMore.value) return
 		queryParam.pageNum++
 		getWallList()
 	})
+
+	// 获取图片数据
 	const getWallList = async () => {
 		let func = queryParam.type ? apiUserWallList : apiGetWallList
 		let res = await func(queryParam)
 		if (res.data?.length < queryParam.pageSize) {
-			noData.value = true
+			noMore.value = true
 		}
 		wallpaperList.value = [...wallpaperList.value, ...res.data]
+		// 设置缓存供preview预览页使用
 		uni.setStorageSync('storeWallpaperList', wallpaperList.value)
 	}
-
+	// 卸载时清空缓存
 	onUnload(() => {
 		uni.removeStorageSync('storeWallpaperList')
 	})

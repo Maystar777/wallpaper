@@ -1,4 +1,5 @@
 <template>
+	<!-- 分类总览页面 -->
 	<view class="classify-layout page-bg">
 		<custom-nav-bar title="分类"></custom-nav-bar>
 		<view class="classify">
@@ -11,13 +12,17 @@
 	import {
 		apiGetClassify
 	} from '../../api/api.js'
+	
 	const classifyList = ref([])
+
+	// 获取类别数据
 	const getClassify = async () => {
 		let res = await apiGetClassify({
 			pageSize: 15
 		})
 		classifyList.value = res.data
 	}
+
 	onLoad(() => {
 		getClassify()
 	})

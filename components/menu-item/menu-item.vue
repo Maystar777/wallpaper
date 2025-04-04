@@ -1,4 +1,5 @@
 <template>
+	<!-- 用户信息页的菜单项 -->
 	<navigator :url="url" :open-type="openType">
 		<view class="menu-item">
 			<view class="left">

@@ -1,5 +1,7 @@
 <template>
+	<!-- 分类专题的封面 -->
 	<view class="theme-item">
+		<!-- 普通封面 -->
 		<navigator :url="`/pages/classifyList/classifyList?id=${item._id}&name=${item.name}`" class="box"
 			v-if="!isMore">
 			<image class="pic" :src="item.picurl" aspectFill></image>
@@ -10,6 +12,7 @@
 				{{ item.name }}
 			</view>
 		</navigator>
+		<!-- 特殊封面，全模糊，用于显示“更多” -->
 		<navigator url="/pages/classify/classify" open-type="switchTab" class="box more" v-else>
 			<image class="pic" src="/common/images/more.jpg" aspectFill></image>
 			<view class="mask">

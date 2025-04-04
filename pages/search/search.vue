@@ -1,13 +1,15 @@
 <template>
 	<view class="searchLayout">
+		<!-- 搜索框插件 -->
 		<view class="search">
 			<uni-search-bar @confirm="onSearch" @cancel="onClear('cancel')" @clear="onClear('')" focus placeholder="搜索"
 				v-model="queryParams.keyword">
 			</uni-search-bar>
 		</view>
 
-
+		<!-- 标签快捷搜索 -->
 		<view v-if="!classList.length || noData">
+			<!-- 最近搜索 -->
 			<view class="history" v-if="historySearch.length">
 				<view class="topTitle">
 					<view class="text">最近搜索</view>
@@ -19,7 +21,7 @@
 					<view class="tag" v-for="tag in historySearch" :key="tag" @click="clickTag(tag)">{{tag}}</view>
 				</view>
 			</view>
-
+			<!-- 热门搜索 -->
 			<view class="recommend">
 				<view class="topTitle">
 					<view class="text">热门搜索</view>
@@ -30,10 +32,11 @@
 			</view>
 		</view>
 
+		<!-- 搜索无结果时展示 -->
 		<view class="noData" v-if="noData">
 			<uv-empty mode="search"></uv-empty>
 		</view>
-
+		<!-- 搜索结果 -->
 		<view v-else>
 			<view class="list">
 				<navigator :url="`/pages/preview/preview?id=${item._id}`" class="item" v-for="item in classList"
@@ -44,8 +47,6 @@
 			<view class="loading-layout" v-if="noMoreData || classList.length"><uni-load-more
 					:status="noMoreData?'noMore':'loading'" /></view>
 		</view>
-
-
 	</view>
 </template>
 
@@ -76,7 +77,7 @@
 	const classList = ref([]);
 
 
-	//点击搜索
+	//点击搜索按钮
 	const onSearch = () => {
 		uni.showLoading({
 			title: '搜索中...'
@@ -88,12 +89,13 @@
 			})
 			return
 		}
+		// 加入搜索历史
 		historySearch.value = [...new Set([queryParams.value.keyword, ...historySearch.value])].slice(0, 10)
 		uni.setStorageSync('historySearch', historySearch.value)
 		initParams(queryParams.value.keyword)
 		searchData()
 	}
-
+	// 搜索请求
 	const searchData = async () => {
 		try {
 			let res = await apiSearchWall(queryParams.value)
@@ -110,6 +112,7 @@
 	const onClear = () => {
 		initParams()
 	}
+	// 初始化/重置数据
 	const initParams = (value) => {
 		queryParams.value = {
 			pageNum: 1,
@@ -121,14 +124,11 @@
 		noData.value = false
 	}
 
-
-
 	//点击标签进行搜索
 	const clickTag = (value) => {
 		initParams(value)
 		onSearch()
 	}
-
 
 	//点击清空搜索记录
 	const removeHistory = () => {

@@ -1,6 +1,9 @@
 <template>
+	<!-- 用户页 -->
 	<view class="user-layout page-bg" v-if="userInfo">
+		<!-- 填充区，和navBar高度一致 -->
 		<view :style="{ height: getNavBarHeight()+'px' }"></view>
+		<!-- 用户信息 -->
 		<view class="user-info">
 			<view class="avator">
 				<image src="/static/images/logo.png" mode="aspectFill"></image>
@@ -12,6 +15,7 @@
 				来自于：{{ userInfo?.address?.city ||userInfo?.address?.province || userInfo?.address?.country }}
 			</view>
 		</view>
+		<!-- 菜单按钮 -->
 		<view class="section">
 			<view class="list">
 				<menu-item v-for="(item,index) in menu1" :key="item.name" v-bind="item"></menu-item>
@@ -23,6 +27,7 @@
 			</view>
 		</view>
 	</view>
+	<!-- loading加载中 -->
 	<view class="loading-layout" v-else>
 		<view :style="{ height: getNavBarHeight()+'px' }"></view>
 		<uni-load-more status="loading"></uni-load-more>
@@ -36,7 +41,7 @@
 	import {
 		apiUserInfo
 	} from '../../api/api.js'
-
+	// 菜单配置项
 	const menu1 = ref([{
 		icon: 'download-filled',
 		name: '我的下载',
@@ -63,6 +68,7 @@
 	}, ])
 
 	const userInfo = ref(null)
+	// 获取用户信息
 	const getUserInfo = () => {
 		apiUserInfo().then(res => {
 			userInfo.value = res.data

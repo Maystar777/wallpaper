@@ -1,7 +1,10 @@
 <template>
+	<!-- 公共头部 -->
 	<view class="custom-nav-bar">
 		<view class="nav-bar">
+			<!-- 状态栏高度占位区块 -->
 			<view class="status-bar" :style="{ height: getStatusBarHeight()-5+'px' }"></view>
+			<!-- 标题栏 和 右侧小程序自带按钮对齐 -->
 			<view class="title-bar" :style="{ height: getTitleBarHeight()+5+'px', marginLeft: getleftIcon()+'px' }">
 				<view class="title">
 					{{ title }}
@@ -12,6 +15,7 @@
 				</navigator>
 			</view>
 		</view>
+		<!-- 填充区。因为上面的view用fixed定位，脱离了文档流，因此需要一个填充区撑开高度 -->
 		<view class="fill" :style="{height: getNavBarHeight()+'px' }"></view>
 	</view>
 </template>
@@ -39,6 +43,7 @@
 			left: 0;
 			width: 100%;
 			z-index: 10;
+			// 双重渐变
 			background:
 				linear-gradient(to bottom, transparent, #fff 400rpx),
 				linear-gradient(to right, #a8e6cf, #dcedc1);

@@ -1,6 +1,6 @@
 const accessKey = 'yuhuiwallpaper@'
 const BASE_URL = 'https://tea.qingnian8.com/api/bizhi/'
-
+// 封装请求，做一层处理
 export function request(option = {}) {
 	const {
 		url,

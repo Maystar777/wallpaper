@@ -16,6 +16,7 @@
 
 
 		<view class="content">
+			<!-- 用于显示Html内容的插件，图片可以点击全屏显示 -->
 			<mp-html :content="detail.content" />
 		</view>
 

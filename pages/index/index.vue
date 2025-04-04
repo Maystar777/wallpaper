@@ -1,20 +1,26 @@
 <template>
+	<!-- 首页 -->
 	<view class="home-layout page-bg">
+		<!-- 自定义公共头部 -->
 		<custom-nav-bar title="推荐"></custom-nav-bar>
+		<!-- Banner横向轮播 -->
 		<view class="banner">
 			<swiper indicator-dots autoplay :interval="3000" :duration="1000" indicator-color="rgba(255,255,255,0.5)"
 				indicator-active-color="#fff">
 				<swiper-item v-for="item in bannerList" :key="item._id">
+					<!-- 跳转其他小程序 -->
 					<navigator v-if="item.target === 'miniProgram'" target='miniProgram' :app-id="item.appid"
 						class="link" :url="`/pages/classifyList/classifyList?${item.url}`">
 						<image :src="item.picurl" mode="aspectFill"></image>
 					</navigator>
+					<!-- 跳转站内页面 -->
 					<navigator v-else class="link" :url="`/pages/classifyList/classifyList?${item.url}`">
 						<image :src="item.picurl" mode="aspectFill"></image>
 					</navigator>
 				</swiper-item>
 			</swiper>
 		</view>
+		<!-- 公告竖向轮播 -->
 		<view class="notice">
 			<view class="left">
 				<uni-icons type="sound-filled" size="20"></uni-icons>
@@ -33,6 +39,7 @@
 				<uni-icons type="right" size="16" color="#333"></uni-icons>
 			</view>
 		</view>
+		<!-- 每日推荐 -->
 		<view class="select">
 			<common-title>
 				<template #name>
@@ -53,6 +60,7 @@
 				</scroll-view>
 			</view>
 		</view>
+		<!-- 专题精选 -->
 		<view class="theme">
 			<common-title>
 				<template #name>
@@ -84,11 +92,11 @@
 
 	onLoad(() => {
 		getBanner()
-		getDayRandom()
 		getNotice()
+		getDayRandom()
 		getClassify()
 	})
-
+	// 获取Banner数据
 	const getBanner = async () => {
 		let res = await apiGetBanner()
 		// #ifdef MP-WEIXIN
@@ -98,24 +106,23 @@
 		bannerList.value = (res.data || []).filter(item => item.target !== 'miniProgram')
 		// #endif
 	}
-
-	const getDayRandom = async () => {
-		let res = await apiGetDayRandom()
-		randomList.value = res.data
-	}
-
+	// 获取公告数据
 	const getNotice = async () => {
 		let res = await apiGetNotice()
 		noticeList.value = res.data
 	}
-
+	// 获取每日推荐数据
+	const getDayRandom = async () => {
+		let res = await apiGetDayRandom()
+		randomList.value = res.data
+	}
+	// 获取精选专题（分类）
 	const getClassify = async () => {
 		let res = await apiGetClassify({
 			select: true
 		})
 		classifyList.value = res.data
 	}
-
 	// 跳转到预览页
 	const goPreview = (id) => {
 		uni.setStorageSync('storeWallpaperList', randomList.value)

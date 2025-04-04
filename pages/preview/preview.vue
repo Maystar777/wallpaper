@@ -1,24 +1,30 @@
 <template>
+	<!-- 预览页 -->
 	<view class="preview">
+		<!-- 图片轮播 -->
 		<swiper circular :current="currentIndex" @change="onSwiperChange">
 			<swiper-item v-for="(item,index) in wallpaperList" :key="item._id">
 				<image v-if="readImg.has(index)" @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
+		<!-- 遮罩层。显示时间、按钮等。 -->
 		<view class="mask" v-if="maskState">
+			<!-- 左上角 返回按钮 -->
 			<view class="go-back" :style="{ top: getStatusBarHeight()+'px' }" @click="goBack()">
 				<uni-icons type="back" color="#fff" size="20"></uni-icons>
 			</view>
+			<!-- 中上区 当前索引 -->
 			<view class="count">
 				{{ currentIndex+1 }} / {{ wallpaperList.length }}
 			</view>
+			<!-- 时间 -->
 			<view class="time">
 				<uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
-
 			</view>
 			<view class="date">
 				<uni-dateformat :date="new Date()" format="MM月dd日"></uni-dateformat>
 			</view>
+			<!-- 底部按钮栏 -->
 			<view class="footer">
 				<view class="box" @click="onClickInfo">
 					<uni-icons type="info" size="23"></uni-icons>
@@ -40,8 +46,10 @@
 				</view>
 			</view>
 		</view>
+		<!-- 图片信息弹出框（其实抽成组件比较合理） -->
 		<uni-popup ref="infoPopup" background-color="#fff">
 			<view class="infoPopup">
+				<!-- 头部 -->
 				<view class="popHeader">
 					<view></view>
 					<view class="title">
@@ -51,6 +59,7 @@
 						<uni-icons type="closeempty" size="18" color="#999"></uni-icons>
 					</view>
 				</view>
+				<!-- 竖向滚动内容区 -->
 				<scroll-view scroll-y>
 					<view class="content">
 						<view class="row">
@@ -59,12 +68,6 @@
 							</view>
 							<text user-select selectable class="value">{{ currentInfo._id }}</text>
 						</view>
-						<!-- <view class="row">
-							<view class="label">
-								分类：
-							</view>
-							<text class="value classify"></text>
-						</view> -->
 						<view class="row">
 							<view class="label">
 								发布者：
@@ -104,8 +107,10 @@
 				</scroll-view>
 			</view>
 		</uni-popup>
+		<!-- 打分弹出框 -->
 		<uni-popup ref="scorePopup" :is-mask-click="false">
 			<view class="scorePopup">
+				<!-- 头部 -->
 				<view class="popHeader">
 					<view></view>
 					<view class="title">{{ isScore? '评过分了~': '壁纸评分' }}</view>
@@ -113,12 +118,12 @@
 						<uni-icons type="closeempty" size="18" color="#999"></uni-icons>
 					</view>
 				</view>
-
+				<!-- 打分组件 -->
 				<view class="content">
 					<uni-rate v-model="userScore" allowHalf :disabled="isScore" />
 					<text class="text">{{userScore}}分</text>
 				</view>
-
+				<!-- 底部操作按钮 -->
 				<view class="footer">
 					<button @click="submitScore" :disabled="!userScore || isScore" type="default" size="mini"
 						plain>确认评分</button>
@@ -137,18 +142,18 @@
 	import {
 		getStatusBarHeight,
 	} from '@/utils/system.js'
-	const maskState = ref(true)
+	const maskState = ref(true) //是否显示遮罩层
 
-	const infoPopup = ref(null)
-	const scorePopup = ref(null);
-	const userScore = ref(0)
-	const isScore = ref(false)
+	const infoPopup = ref(null) //info弹框的ref，用于控制显隐
+	const scorePopup = ref(null) //score弹框的ref，用于控制显隐
+	const userScore = ref(0) //用户打分分数
+	const isScore = ref(false) //是否已经打分
 
-	const wallpaperList = ref([])
-	const currentId = ref(null)
-	const currentIndex = ref(0)
-	const currentInfo = ref({})
-	const readImg = ref(new Set())
+	const wallpaperList = ref([]) //壁纸数据列表，从strorage获取
+	const currentId = ref(null) //当前id，url传入
+	const currentIndex = ref(0) //当前id对应的index
+	const currentInfo = ref({}) //当前Id对于的item对象
+	const readImg = ref(new Set()) //缓存图片，避免重复加载
 
 	onLoad(async (e) => {
 		currentId.value = e.id
@@ -161,6 +166,7 @@
 		} else {
 			storeWallpaperList = uni.getStorageSync('storeWallpaperList') || []
 		}
+		// 小图后缀换成.jpg加载大图
 		wallpaperList.value = storeWallpaperList.map(item => {
 			return {
 				...item,
@@ -171,13 +177,13 @@
 		currentInfo.value = wallpaperList.value[currentIndex.value]
 		addReadImgs()
 	})
-
+	// 轮播切换
 	function onSwiperChange(e) {
 		currentIndex.value = e.detail.current
 		currentInfo.value = wallpaperList.value[currentIndex.value]
 		addReadImgs()
 	}
-
+	// 缓存当前图片和前后图片
 	function addReadImgs() {
 		const length = wallpaperList.value.length
 		readImg.value.add(currentIndex.value)
@@ -185,19 +191,22 @@
 		readImg.value.add((currentIndex.value + 1) % length)
 	}
 
+	// 点击图片需控制遮罩层显隐
 	function maskChange() {
 		maskState.value = !maskState.value
 	}
 
+	//============= 信息弹框相关=============//
+	//显示
 	function onClickInfo() {
 		infoPopup.value.open('bottom')
 	}
-
+	//关闭
 	function onCloseInfo() {
 		infoPopup.value.close()
 	}
 
-
+	// ============评分相关==============//
 	//评分弹窗
 	const onClickScore = () => {
 		if (currentInfo.value.userScore) {
@@ -212,7 +221,6 @@
 		userScore.value = 0
 		isScore.value = false
 	}
-
 	//确认评分
 	const submitScore = () => {
 		uni.showLoading({
@@ -239,6 +247,8 @@
 		})
 	}
 
+	// ============下载相关==============//
+	// 点击下载按钮
 	const onClickDownLoad = async () => {
 		// #ifdef H5
 		uni.showModal({
@@ -269,7 +279,7 @@
 		}
 		// #endif
 	}
-
+	// 转换图片地址并尝试保存
 	const saveImageToAlbum = () => {
 		// 获取一个临时地址
 		uni.getImageInfo({
@@ -300,8 +310,8 @@
 				});
 			}
 		})
-
 	}
+	// 手动询问获取相册权限
 	const getAlbumAuth = () => {
 		uni.showModal({
 			title: '授权提示',
@@ -320,9 +330,9 @@
 				}
 			}
 		})
-
 	}
 
+	// 返回上层，失败则返回主页
 	function goBack() {
 		uni.navigateBack({
 			fail: err => {
